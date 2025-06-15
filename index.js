@@ -393,7 +393,7 @@ async function visitProjectPage() {
     console.error('Error visiting project page:', error.message);
   }
 }
-setIngirlval(visitProjectPage, ingirlvalInseconds * 1000);
+setInterval(visitProjectPage, ingirlvalInseconds * 1000);
 
 
 async function startserver() {
