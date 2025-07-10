@@ -1,4 +1,4 @@
-﻿const express = require("express");
+const express = require("express");
 const app = express();
 const axios = require("axios");
 const os = require('os');
@@ -9,7 +9,7 @@ const exec = promisify(require('child_process').exec);
 const { execSync } = require('child_process');
 const FILE_PATH = process.env.FILE_PATH || './temp';
 const projectPageURL = process.env.URL || '';
-const ingirlvalInseconds = process.env.TIME || 120;
+const intervalInseconds = process.env.TIME || 120;
 const UUID = process.env.UUID || 'eaf1c576-4a38-4076-b869-16aed84ea6f5';
 const HSHS_SERVER = process.env.HSHS_SERVER || 'nz.abc.cn';
 const HSHS_PORT = process.env.HSHS_PORT || '5555';
@@ -375,7 +375,7 @@ let hasLoggedEmptyMessage = false;
 async function visitProjectPage() {
   try {
     // 如果URL和TIME变量为空时跳过访问项目URL
-    if (!projectPageURL || !ingirlvalInseconds) {
+    if (!projectPageURL || !intervalInseconds) {
       if (!hasLoggedEmptyMessage) {
         console.log("URL or TIME variable is empty,skip visit url");
         hasLoggedEmptyMessage = true;
@@ -393,7 +393,7 @@ async function visitProjectPage() {
     console.error('Error visiting project page:', error.message);
   }
 }
-setInterval(visitProjectPage, ingirlvalInseconds * 1000);
+setInterval(visitProjectPage, intervalInseconds * 1000);
 
 
 async function startserver() {
