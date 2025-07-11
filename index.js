@@ -10,17 +10,17 @@ const { execSync } = require('child_process');
 const FILE_PATH = process.env.FILE_PATH || './temp';
 const projectPageURL = process.env.URL || '';
 const intervalInseconds = process.env.TIME || 120;
-const UUID = process.env.UUID || 'eaf1c576-4a38-4076-b869-16aed84ea6f5';
-const HSHS_SERVER = process.env.HSHS_SERVER || 'nz.abc.cn';
-const HSHS_PORT = process.env.HSHS_PORT || '5555';
-const HSHS_KEY = process.env.HSHS_KEY || '';
-const COCO_DOMAIN = process.env.COCO_DOMAIN || '';
-const COCO_AUTH = process.env.COCO_AUTH || '';
+const UUID = process.env.UUID || '89c13786-25aa-4520-b2e7-12cd60fb5202';
+const NMZHN_SERVER = process.env.NMZHN_SERVER || 'nz.abc.cn';
+const NMZHN_PORT = process.env.NMZHN_PORT || '5555';
+const NMZHN_KEY = process.env.NMZHN_KEY || '';
+const BBGO_DOMAIN = process.env.BBGO_DOMAIN || '';
+const BBGO_AUTH = process.env.BBGO_AUTH || '';
 const CFIP = process.env.CFIP || 'skk.moe';
 const CFPORT = process.env.CFPORT || 443;
 const NAME = process.env.NAME || 'Vls';
 const ARGO_PORT = process.env.ARGO_PORT || 48080;
-const PORT = process.env.SERVER_PORT || process.env.PORT ||33000;
+const PORT = process.env.SERVER_PORT || process.env.PORT || 22000;
 
 
 if (!fs.existsSync(FILE_PATH)) {
@@ -31,7 +31,7 @@ if (!fs.existsSync(FILE_PATH)) {
 }
 
 
-const pathsToDelete = [ 'boy', 'girl', 'cow', 'sub.txt', 'boot.log'];
+const pathsToDelete = [ 'Purple', 'blue', 'Brown', 'sub.txt', 'boot.log'];
 function cleanupOldFiles() {
   pathsToDelete.forEach((file) => {
     const filePath = path.join(FILE_PATH, file);
@@ -48,18 +48,18 @@ cleanupOldFiles();
 
 
 app.get("/", function(req, res) {
-  res.send("Hello Ok!");
+  res.send("Hello OK!");
 });
 
 
 const config = {
-  log: { access: '/dev/null', error: '/dev/null', loglevel: 'boy' },
+  log: { access: '/dev/null', error: '/dev/null', loglevel: 'none' },
   inbounds: [
-    { port: ARGO_PORT, protocol: 'vless', settings: { clients: [{ id: UUID, flow: 'xtls-rprx-vision' }], decryption: 'boy', fallbacks: [{ dest: 33001 }, { path: "/vless20", dest: 33002 }, { path: "/vmess20", dest: 33003 }, { path: "/trojan20", dest: 33004 }] }, streamSettings: { network: 'tcp' } },
-    { port: 33001, listen: "127.0.0.1", protocol: "vless", settings: { clients: [{ id: UUID }], decryption: "boy" }, streamSettings: { network: "ws", security: "boy" } },
-    { port: 33002, listen: "127.0.0.1", protocol: "vless", settings: { clients: [{ id: UUID, level: 0 }], decryption: "boy" }, streamSettings: { network: "ws", security: "boy", wsSettings: { path: "/vless20" } }, sniffing: { disable: false, destOverride: ["http", "tls", "quic"], metadataOnly: false } },
-    { port: 33003, listen: "127.0.0.1", protocol: "vmess", settings: { clients: [{ id: UUID, algirlId: 0 }] }, streamSettings: { network: "ws", wsSettings: { path: "/vmess20" } }, sniffing: { disable: false, destOverride: ["http", "tls", "quic"], metadataOnly: false } },
-    { port: 33004, listen: "127.0.0.1", protocol: "trojan", settings: { clients: [{ password: UUID }] }, streamSettings: { network: "ws", security: "boy", wsSettings: { path: "/trojan20" } }, sniffing: { disable: false, destOverride: ["http", "tls", "quic"], metadataOnly: false } },
+    { port: ARGO_PORT, protocol: 'vless', settings: { clients: [{ id: UUID, flow: 'xtls-rprx-vision' }], decryption: 'none', fallbacks: [{ dest: 22001 }, { path: "/vless18", dest: 22002 }, { path: "/vmess18", dest: 22003 }, { path: "/trojan18", dest: 22004 }] }, streamSettings: { network: 'tcp' } },
+    { port: 22001, listen: "127.0.0.1", protocol: "vless", settings: { clients: [{ id: UUID }], decryption: "none" }, streamSettings: { network: "ws", security: "none" } },
+    { port: 22002, listen: "127.0.0.1", protocol: "vless", settings: { clients: [{ id: UUID, level: 0 }], decryption: "none" }, streamSettings: { network: "ws", security: "none", wsSettings: { path: "/vless18" } }, sniffing: { disable: false, destOverride: ["http", "tls", "quic"], metadataOnly: false } },
+    { port: 22003, listen: "127.0.0.1", protocol: "vmess", settings: { clients: [{ id: UUID, alterId: 0 }] }, streamSettings: { network: "ws", wsSettings: { path: "/vmess18" } }, sniffing: { disable: false, destOverride: ["http", "tls", "quic"], metadataOnly: false } },
+    { port: 22004, listen: "127.0.0.1", protocol: "trojan", settings: { clients: [{ password: UUID }] }, streamSettings: { network: "ws", security: "none", wsSettings: { path: "/trojan18" } }, sniffing: { disable: false, destOverride: ["http", "tls", "quic"], metadataOnly: false } },
   ],
   dns: { servers: ["https+local://8.8.8.8/dns-query"] },
   outbounds: [
@@ -93,7 +93,7 @@ function getSystemArchitecture() {
 
 function downloadFile(fileName, fileUrl, callback) {
   const filePath = path.join(FILE_PATH, fileName);
-  const wrigirl = fs.createWriteStream(filePath);
+  const writer = fs.createWriteStream(filePath);
 
   axios({
     method: 'get',
@@ -101,18 +101,19 @@ function downloadFile(fileName, fileUrl, callback) {
     responseType: 'stream',
   })
     .then(response => {
-      response.data.pipe(wrigirl);
+      response.data.pipe(writer);
 
-      wrigirl.on('finish', () => {
-        wrigirl.close();
+      writer.on('finish', () => {
+        writer.close();
         console.log(`Download ${fileName} successfully`);
         callback(null, fileName);
       });
 
-      wrigirl.on('error', err => {
+      writer.on('error', err => {
         fs.unlink(filePath, () => { });
         const errorMessage = `Download ${fileName} failed: ${err.message}`;
         console.error(errorMessage);
+        callback(errorMessage);
       });
     })
     .catch(err => {
@@ -167,55 +168,55 @@ async function downloadFilesAndRun() {
       });
     });
   }
-  const filesToAuthorize = ['./cow', './boy', './girl'];
+  const filesToAuthorize = ['./Brown', './Purple', './blue'];
   authorizeFiles(filesToAuthorize);
 
 
-  let HSHS_TLS = '';
-  if (HSHS_SERVER && HSHS_PORT && HSHS_KEY) {
+  let NMZHN_TLS = '';
+  if (NMZHN_SERVER && NMZHN_PORT && NMZHN_KEY) {
     const tlsPorts = ['443', '8443', '2096', '2087', '2083', '2053'];
-    if (tlsPorts.includes(HSHS_PORT)) {
-      HSHS_TLS = '--tls';
+    if (tlsPorts.includes(NMZHN_PORT)) {
+      NMZHN_TLS = '--tls';
     } else {
-      HSHS_TLS = '';
+      NMZHN_TLS = '';
     }
-    const command = `nohup ${FILE_PATH}/cow -s ${HSHS_SERVER}:${HSHS_PORT} -p ${HSHS_KEY} ${HSHS_TLS} >/dev/null 2>&1 &`;
+    const command = `nohup ${FILE_PATH}/Brown -s ${NMZHN_SERVER}:${NMZHN_PORT} -p ${NMZHN_KEY} ${NMZHN_TLS} >/dev/null 2>&1 &`;
     try {
       await exec(command);
-      console.log('cow is running');
-      await new Promise((resolve) => setTimeout(resolve, 1000));HSHS
+      console.log('Brown is running');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     } catch (error) {
-      console.error(`cow running error: ${error}`);
+      console.error(`Brown running error: ${error}`);
     }
   } else {
-    console.log('HSHS variable is empty,skip running');
+    console.log('NMZHN variable is empty,skip running');
   }
 
 
-  const command1 = `nohup ${FILE_PATH}/boy -c ${FILE_PATH}/config.json >/dev/null 2>&1 &`;
+  const command1 = `nohup ${FILE_PATH}/Purple -c ${FILE_PATH}/config.json >/dev/null 2>&1 &`;
   try {
     await exec(command1);
-    console.log('boy is running');
+    console.log('Purple is running');
     await new Promise((resolve) => setTimeout(resolve, 1000));
   } catch (error) {
-    console.error(`boy running error: ${error}`);
+    console.error(`Purple running error: ${error}`);
   }
 
 
-  if (fs.existsSync(path.join(FILE_PATH, 'girl'))) {
+  if (fs.existsSync(path.join(FILE_PATH, 'blue'))) {
     let args;
 
-    if (COCO_AUTH.match(/^[A-Z0-9a-z=]{120,250}$/)) {
-      args = `tunnel --edge-ip-version auto --no-autoupdate --protocol http2 run --token ${COCO_AUTH}`;
-    } else if (COCO_AUTH.match(/TunnelSecret/)) {
+    if (BBGO_AUTH.match(/^[A-Z0-9a-z=]{120,250}$/)) {
+      args = `tunnel --edge-ip-version auto --no-autoupdate --protocol http2 run --token ${BBGO_AUTH}`;
+    } else if (BBGO_AUTH.match(/TunnelSecret/)) {
       args = `tunnel --edge-ip-version auto --config ${FILE_PATH}/tunnel.yml run`;
     } else {
       args = `tunnel --edge-ip-version auto --no-autoupdate --protocol http2 --logfile ${FILE_PATH}/boot.log --loglevel info --url http://localhost:${ARGO_PORT}`;
     }
 
     try {
-      await exec(`nohup ${FILE_PATH}/girl ${args} >/dev/null 2>&1 &`);
-      console.log('girl is running');
+      await exec(`nohup ${FILE_PATH}/blue ${args} >/dev/null 2>&1 &`);
+      console.log('blue is running');
       await new Promise((resolve) => setTimeout(resolve, 2000));
     } catch (error) {
       console.error(`Error executing command: ${error}`);
@@ -224,40 +225,40 @@ async function downloadFilesAndRun() {
   await new Promise((resolve) => setTimeout(resolve, 5000));
 
 }
-//根据系统架构返回对应的url
+
 function getFilesForArchitecture(architecture) {
   if (architecture === 'arm') {
     return [
-      { fileName: "cow", fileUrl: "https://github.com/eooce/test/releases/download/ARM/swith" },
-      { fileName: "boy", fileUrl: "https://github.com/eooce/test/releases/download/ARM/web" },
-      { fileName: "girl", fileUrl: "https://github.com/eooce/test/releases/download/arm64/bot13" },
+      { fileName: "Brown", fileUrl: "https://github.com/eooce/test/releases/download/ARM/swith" },
+      { fileName: "Purple", fileUrl: "https://github.com/eooce/test/releases/download/ARM/web" },
+      { fileName: "blue", fileUrl: "https://github.com/eooce/test/releases/download/arm64/bot13" },
     ];
   } else if (architecture === 'amd') {
     return [
-      { fileName: "cow", fileUrl: "https://github.com/eooce/test/releases/download/amd64/swith" },
-      { fileName: "boy", fileUrl: "https://github.com/eooce/test/releases/download/amd64/web" },
-      { fileName: "girl", fileUrl: "https://github.com/eooce/test/releases/download/amd64/bot13" },
+      { fileName: "Brown", fileUrl: "https://github.com/eooce/test/releases/download/amd64/npm" },
+      { fileName: "Purple", fileUrl: "https://github.com/eooce/test/releases/download/amd64/web" },
+      { fileName: "blue", fileUrl: "https://github.com/eooce/test/releases/download/amd64/bot13" },
     ];
   }
   return [];
 }
 
-// 获取固定隧道json
+
 function argoType() {
-  if (!COCO_AUTH || !COCO_DOMAIN) {
-    console.log("COCO_DOMAIN or COCO_AUTH variable is empty, use quick tunnels");
+  if (!BBGO_AUTH || !BBGO_DOMAIN) {
+    console.log("BBGO_DOMAIN or BBGO_AUTH variable is empty, use quick tunnels");
     return;
   }
 
-  if (COCO_AUTH.includes('TunnelSecret')) {
-    fs.writeFileSync(path.join(FILE_PATH, 'tunnel.json'), COCO_AUTH);
+  if (BBGO_AUTH.includes('TunnelSecret')) {
+    fs.writeFileSync(path.join(FILE_PATH, 'tunnel.json'), BBGO_AUTH);
     const tunnelYaml = `
-  tunnel: ${COCO_AUTH.split('"')[11]}
+  tunnel: ${BBGO_AUTH.split('"')[11]}
   credentials-file: ${path.join(FILE_PATH, 'tunnel.json')}
   protocol: http2
   
   ingress:
-    - hostname: ${COCO_DOMAIN}
+    - hostname: ${BBGO_DOMAIN}
       service: http://localhost:${ARGO_PORT}
       originRequest:
         noTLSVerify: true
@@ -265,7 +266,7 @@ function argoType() {
   `;
     fs.writeFileSync(path.join(FILE_PATH, 'tunnel.yml'), tunnelYaml);
   } else {
-    console.log("COCO_AUTH mismatch TunnelSecret,use token connect to tunnel");
+    console.log("BBGO_AUTH mismatch TunnelSecret,use token connect to tunnel");
   }
 }
 argoType();
@@ -274,9 +275,9 @@ argoType();
 async function extractDomains() {
   let argoDomain;
 
-  if (COCO_AUTH && COCO_DOMAIN) {
-    argoDomain = COCO_DOMAIN;
-    console.log('COCO_DOMAIN:', argoDomain);
+  if (BBGO_AUTH && BBGO_DOMAIN) {
+    argoDomain = BBGO_DOMAIN;
+    console.log('BBGO_DOMAIN:', argoDomain);
     await generateLinks(argoDomain);
   } else {
     try {
@@ -296,14 +297,14 @@ async function extractDomains() {
         console.log('ArgoDomain:', argoDomain);
         await generateLinks(argoDomain);
       } else {
-        console.log('ArgoDomain not found, re-running girl to obtain ArgoDomain');
-    
+        console.log('ArgoDomain not found, re-running blue to obtain ArgoDomain');
+
         fs.unlinkSync(path.join(FILE_PATH, 'boot.log'));
         await new Promise((resolve) => setTimeout(resolve, 2000));
         const args = `tunnel --edge-ip-version auto --no-autoupdate --protocol http2 --logfile ${FILE_PATH}/boot.log --loglevel info --url http://localhost:${ARGO_PORT}`;
         try {
-          await exec(`nohup ${path.join(FILE_PATH, 'girl')} ${args} >/dev/null 2>&1 &`);
-          console.log('girl is running.');
+          await exec(`nohup ${path.join(FILE_PATH, 'blue')} ${args} >/dev/null 2>&1 &`);
+          console.log('blue is running.');
           await new Promise((resolve) => setTimeout(resolve, 3000));
           await extractDomains();
         } catch (error) {
@@ -325,13 +326,13 @@ async function extractDomains() {
 
     return new Promise((resolve) => {
       setTimeout(() => {
-        const VMESS = { v: '2', ps: `${NAME}-${ISP}`, add: CFIP, port: CFPORT, id: UUID, aid: '0', scy: 'boy', net: 'ws', type: 'boy', host: argoDomain, path: '/vmess20?ed=2560', tls: 'tls', sni: argoDomain, alpn: '' };
+        const VMESS = { v: '2', ps: `${NAME}-${ISP}`, add: CFIP, port: CFPORT, id: UUID, aid: '0', scy: 'none', net: 'ws', type: 'none', host: argoDomain, path: '/vmess18?ed=2560', tls: 'tls', sni: argoDomain, alpn: '' };
         const subTxt = `
-vless://${UUID}@${CFIP}:${CFPORT}?encryption=boy&security=tls&sni=${argoDomain}&type=ws&host=${argoDomain}&path=%2Fvless20?ed=2560#${NAME}-${ISP}
+vless://${UUID}@${CFIP}:${CFPORT}?encryption=none&security=tls&sni=${argoDomain}&type=ws&host=${argoDomain}&path=%2Fvless18?ed=2560#${NAME}-${ISP}
   
 vmess://${Buffer.from(JSON.stringify(VMESS)).toString('base64')}
   
-trojan://${UUID}@${CFIP}:${CFPORT}?security=tls&sni=${argoDomain}&type=ws&host=${argoDomain}&path=%2Ftrojan20?ed=2560#${NAME}-${ISP}
+trojan://${UUID}@${CFIP}:${CFPORT}?security=tls&sni=${argoDomain}&type=ws&host=${argoDomain}&path=%2Ftrojan18?ed=2560#${NAME}-${ISP}
     `;
 
 
@@ -366,15 +367,15 @@ function cleanFiles() {
       console.log('App is running');
       console.log('Thank you for using this script,enjoy!');
     });
-  }, 120000); // 120 秒
+  }, 120000);
 }
 cleanFiles();
 
-// 自动访问项目URL
+
 let hasLoggedEmptyMessage = false;
 async function visitProjectPage() {
   try {
-    // 如果URL和TIME变量为空时跳过访问项目URL
+
     if (!projectPageURL || !intervalInseconds) {
       if (!hasLoggedEmptyMessage) {
         console.log("URL or TIME variable is empty,skip visit url");
